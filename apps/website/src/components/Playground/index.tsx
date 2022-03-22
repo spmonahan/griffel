@@ -17,7 +17,6 @@ export default function Playground() {
           '@griffel/core': 'latest',
           'highlight.js': 'latest',
           'js-beautify': 'latest',
-          'w3c-css-validator': 'latest',
         },
         files: {
           '/App.js': { code: AppCode, hidden: true },

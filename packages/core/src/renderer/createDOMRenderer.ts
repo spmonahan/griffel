@@ -45,7 +45,11 @@ export function createDOMRenderer(
   target: Document | undefined = typeof document === 'undefined' ? undefined : document,
   options: CreateDOMRendererOptions = {},
 ): GriffelRenderer {
-  const { unstable_filterCSSRule, compareMediaQueries = defaultCompareMediaQueries } = options;
+  const {
+    unstable_filterCSSRule,
+    compareMediaQueries = defaultCompareMediaQueries,
+    constructableStylesheets = true,
+  } = options;
   const renderer: GriffelRenderer = {
     insertionCache: {},
     stylesheets: {},
@@ -67,7 +71,7 @@ export function createDOMRenderer(
             renderer,
             options.styleElementAttributes,
             metadata,
-            options.constructableStylesheets,
+            constructableStylesheets,
           );
 
           if (renderer.insertionCache[ruleCSS]) {

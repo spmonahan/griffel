@@ -17,11 +17,18 @@ export function createIsomorphicStyleSheet(
     }
   }
 
+  let sheet: CSSStyleSheet;
   function insertRule(rule: string) {
     if (constructableStylesheets) {
-      const sheet = new CSSStyleSheet();
-      // @ts-expect-error
-      sheet.replaceSync(rule);
+      if (!sheet) {
+        sheet = new CSSStyleSheet();
+        // @ts-expect-error
+        sheet.replaceSync(rule);
+        // @ts-expect-error
+        document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+      } else {
+        sheet.insertRule(rule, sheet.cssRules.length);
+      }
       return sheet.cssRules.length;
     } else if (styleElement?.sheet) {
       return styleElement.sheet.insertRule(rule, styleElement.sheet.cssRules.length);
@@ -36,7 +43,9 @@ export function createIsomorphicStyleSheet(
     element: styleElement,
     bucketName,
     cssRules() {
-      if (styleElement?.sheet) {
+      if (constructableStylesheets) {
+        return Array.from(sheet.cssRules).map(cssRule => cssRule.cssText);
+      } else if (styleElement?.sheet) {
         return Array.from(styleElement.sheet.cssRules).map(cssRule => cssRule.cssText);
       }
 

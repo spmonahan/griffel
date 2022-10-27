@@ -29,6 +29,8 @@ export interface CreateDOMRendererOptions {
    * @returns positive number if a > b or negative number if a < b
    */
   compareMediaQueries?: (a: string, b: string) => number;
+
+  constructableStylesheets?: boolean;
 }
 
 /** @internal */
@@ -65,6 +67,7 @@ export function createDOMRenderer(
             renderer,
             options.styleElementAttributes,
             metadata,
+            options.constructableStylesheets,
           );
 
           if (renderer.insertionCache[ruleCSS]) {

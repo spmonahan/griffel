@@ -5,6 +5,7 @@ export function createIsomorphicStyleSheet(
   styleElement: HTMLStyleElement | undefined,
   bucketName: StyleBucketName,
   elementAttributes: Record<string, string>,
+  constructableStylesheets: boolean,
 ): IsomorphicStyleSheet {
   // no CSSStyleSheet in SSR, just append rules here for server render
   const __cssRulesForSSR: string[] = [];
@@ -17,7 +18,12 @@ export function createIsomorphicStyleSheet(
   }
 
   function insertRule(rule: string) {
-    if (styleElement?.sheet) {
+    if (constructableStylesheets) {
+      const sheet = new CSSStyleSheet();
+      // @ts-expect-error
+      sheet.replaceSync(rule);
+      return sheet.cssRules.length;
+    } else if (styleElement?.sheet) {
       return styleElement.sheet.insertRule(rule, styleElement.sheet.cssRules.length);
     }
 
@@ -48,6 +54,7 @@ export function createIsomorphicStyleSheetFromElement(element: HTMLStyleElement)
     element,
     elementAttributes[DATA_BUCKET_ATTR] as StyleBucketName,
     elementAttributes,
+    false,
   );
   return stylesheet;
 }

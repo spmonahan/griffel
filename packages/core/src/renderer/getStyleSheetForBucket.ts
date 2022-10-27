@@ -49,6 +49,7 @@ export function getStyleSheetForBucket(
   renderer: GriffelRenderer,
   elementAttributes: Record<string, string> = {},
   metadata?: Record<string, unknown>,
+  constructableStylesheets?: boolean,
 ): IsomorphicStyleSheet {
   let stylesheetKey: StyleBucketName | string = bucketName;
 
@@ -63,7 +64,7 @@ export function getStyleSheetForBucket(
       elementAttributes['media'] = metadata['m'] as string;
     }
 
-    const stylesheet = createIsomorphicStyleSheet(tag, bucketName, elementAttributes);
+    const stylesheet = createIsomorphicStyleSheet(tag, bucketName, elementAttributes, !!constructableStylesheets);
     renderer.stylesheets[stylesheetKey] = stylesheet;
 
     if (target && tag) {

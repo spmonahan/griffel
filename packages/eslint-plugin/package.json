@@ -13,8 +13,5 @@
   },
   "peerDependencies": {
     "eslint": "^7.5.0 || ^8.0.0"
-  },
-  "main": "../../dist/packages/eslint-plugin/index.cjs.js",
-  "module": "../../dist/packages/eslint-plugin/index.esm.js",
-  "typings": "../../dist/packages/eslint-plugin/index.d.ts"
+  }
 }

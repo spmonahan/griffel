@@ -14,8 +14,5 @@
     "rtl-css-js": "^1.16.0",
     "stylis": "^4.0.13",
     "tslib": "^2.1.0"
-  },
-  "main": "../../dist/packages/core/index.cjs.js",
-  "module": "../../dist/packages/core/index.esm.js",
-  "typings": "../../dist/packages/core/index.d.ts"
+  }
 }

@@ -17,8 +17,5 @@
     "react": ">=16.8.0 <18.0.0",
     "source-map-js": "1.0.2",
     "stylis": "^4.0.13"
-  },
-  "main": "../../dist/packages/devtools/index.cjs.js",
-  "module": "../../dist/packages/devtools/index.esm.js",
-  "typings": "../../dist/packages/devtools/index.d.ts"
+  }
 }

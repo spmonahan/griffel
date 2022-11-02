@@ -18,8 +18,5 @@
   "peerDependencies": {
     "@griffel/react": "^1.4.1",
     "webpack": "^5"
-  },
-  "main": "../../dist/packages/webpack-loader/index.cjs.js",
-  "module": "../../dist/packages/webpack-loader/index.esm.js",
-  "typings": "../../dist/packages/webpack-loader/index.d.ts"
+  }
 }

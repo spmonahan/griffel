@@ -18,8 +18,5 @@
   "peerDependencies": {
     "@griffel/core": "^1.8.0",
     "webpack": "^5"
-  },
-  "main": "../../dist/packages/webpack-extraction-plugin/index.cjs.js",
-  "module": "../../dist/packages/webpack-extraction-plugin/index.esm.js",
-  "typings": "../../dist/packages/webpack-extraction-plugin/index.d.ts"
+  }
 }

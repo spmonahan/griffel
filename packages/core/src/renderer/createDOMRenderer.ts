@@ -31,6 +31,8 @@ export interface CreateDOMRendererOptions {
   compareMediaQueries?: (a: string, b: string) => number;
 
   constructableStylesheets?: boolean;
+
+  styleTagTarget?: HTMLElement | null;
 }
 
 /** @internal */
@@ -49,6 +51,7 @@ export function createDOMRenderer(
     unstable_filterCSSRule,
     compareMediaQueries = defaultCompareMediaQueries,
     constructableStylesheets = true,
+    styleTagTarget,
   } = options;
   const renderer: GriffelRenderer = {
     insertionCache: {},
@@ -72,6 +75,7 @@ export function createDOMRenderer(
             options.styleElementAttributes,
             metadata,
             constructableStylesheets,
+            styleTagTarget,
           );
 
           if (renderer.insertionCache[ruleCSS]) {

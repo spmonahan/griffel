@@ -15,7 +15,7 @@
   "peerDependencies": {
     "react": ">=16.8.0 <18.0.0"
   },
-  "main": "../../dist/index.cjs.js",
-  "module": "../../dist/index.esm.js",
-  "typings": "../../dist/index.d.ts"
+  "main": "../../dist/packages/react/index.cjs.js",
+  "module": "../../dist/packages/react/index.esm.js",
+  "typings": "../../dist/packages/react/index.d.ts"
 }

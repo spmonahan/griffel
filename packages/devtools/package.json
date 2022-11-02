@@ -18,7 +18,7 @@
     "source-map-js": "1.0.2",
     "stylis": "^4.0.13"
   },
-  "main": "../../dist/index.cjs.js",
-  "module": "../../dist/index.esm.js",
-  "typings": "../../dist/index.d.ts"
+  "main": "../../dist/packages/devtools/index.cjs.js",
+  "module": "../../dist/packages/devtools/index.esm.js",
+  "typings": "../../dist/packages/devtools/index.d.ts"
 }

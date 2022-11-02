@@ -16,7 +16,7 @@
     "next": "^12.0.5",
     "webpack": "^5"
   },
-  "main": "../../dist/index.cjs.js",
-  "module": "../../dist/index.esm.js",
-  "typings": "../../dist/index.d.ts"
+  "main": "../../dist/packages/next-extraction-plugin/index.cjs.js",
+  "module": "../../dist/packages/next-extraction-plugin/index.esm.js",
+  "typings": "../../dist/packages/next-extraction-plugin/index.d.ts"
 }

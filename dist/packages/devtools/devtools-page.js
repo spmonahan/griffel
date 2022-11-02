@@ -1,0 +1,1 @@
+chrome.devtools.panels.elements.createSidebarPane("\ud83d\udc85 Griffel",(e=>{e.setPage("index.html"),e.onShown.addListener((e=>{e.postMessage({visible:!0},"*")}))}));

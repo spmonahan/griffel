@@ -1,6 +1,12 @@
 import { DATA_BUCKET_ATTR } from '../constants';
 import { IsomorphicStyleSheet, StyleBucketName } from '../types';
 
+declare global {
+  interface Window {
+    __adoptedStylesheets__: CSSStyleSheet[];
+  }
+}
+
 export function createIsomorphicStyleSheet(
   styleElement: HTMLStyleElement | undefined,
   bucketName: StyleBucketName,
@@ -26,6 +32,10 @@ export function createIsomorphicStyleSheet(
         sheet.replaceSync(rule);
         // @ts-expect-error
         document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+        // if (!window.__adoptedStylesheets__) {
+        //   window.__adoptedStylesheets__ = [];
+        // }
+        // window.__adoptedStylesheets__.push(sheet);
       } else {
         sheet.insertRule(rule, sheet.cssRules.length);
       }

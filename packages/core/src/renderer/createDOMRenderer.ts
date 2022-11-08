@@ -29,6 +29,10 @@ export interface CreateDOMRendererOptions {
    * @returns positive number if a > b or negative number if a < b
    */
   compareMediaQueries?: (a: string, b: string) => number;
+
+  constructableStylesheets?: boolean;
+
+  styleTagTarget?: HTMLElement | null;
 }
 
 /** @internal */
@@ -43,7 +47,12 @@ export function createDOMRenderer(
   target: Document | undefined = typeof document === 'undefined' ? undefined : document,
   options: CreateDOMRendererOptions = {},
 ): GriffelRenderer {
-  const { unstable_filterCSSRule, compareMediaQueries = defaultCompareMediaQueries } = options;
+  const {
+    unstable_filterCSSRule,
+    compareMediaQueries = defaultCompareMediaQueries,
+    constructableStylesheets = true,
+    styleTagTarget,
+  } = options;
   const renderer: GriffelRenderer = {
     insertionCache: {},
     stylesheets: {},
@@ -65,6 +74,8 @@ export function createDOMRenderer(
             renderer,
             options.styleElementAttributes,
             metadata,
+            constructableStylesheets,
+            styleTagTarget,
           );
 
           if (renderer.insertionCache[ruleCSS]) {

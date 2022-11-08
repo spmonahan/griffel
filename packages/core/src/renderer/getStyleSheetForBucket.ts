@@ -49,6 +49,8 @@ export function getStyleSheetForBucket(
   renderer: GriffelRenderer,
   elementAttributes: Record<string, string> = {},
   metadata?: Record<string, unknown>,
+  constructableStylesheets?: boolean,
+  styleTagTarget?: HTMLElement | null,
 ): IsomorphicStyleSheet {
   let stylesheetKey: StyleBucketName | string = bucketName;
 
@@ -63,10 +65,18 @@ export function getStyleSheetForBucket(
       elementAttributes['media'] = metadata['m'] as string;
     }
 
-    const stylesheet = createIsomorphicStyleSheet(tag, bucketName, elementAttributes);
+    const stylesheet = createIsomorphicStyleSheet(tag, bucketName, elementAttributes, !!constructableStylesheets);
     renderer.stylesheets[stylesheetKey] = stylesheet;
 
-    if (target && tag) {
+    if (styleTagTarget && tag) {
+      if (styleTagTarget.shadowRoot) {
+        const elementSibling = findElementSibling(styleTagTarget.shadowRoot, bucketName, renderer, metadata);
+        styleTagTarget.shadowRoot.insertBefore(tag, elementSibling);
+      } else {
+        const elementSibling = findElementSibling(styleTagTarget, bucketName, renderer, metadata);
+        styleTagTarget.insertBefore(tag, elementSibling);
+      }
+    } else if (target && tag) {
       const elementSibling = findElementSibling(target, bucketName, renderer, metadata);
       target.head.insertBefore(tag, elementSibling);
     }
@@ -86,7 +96,7 @@ export function getStyleSheetForBucket(
  * @returns - Smallest style element with greater sort order than the current bucket
  */
 function findElementSibling(
-  target: Document,
+  target: Document | HTMLElement | ShadowRoot,
   targetBucket: StyleBucketName,
   renderer: GriffelRenderer,
   metadata?: Record<string, unknown>,
@@ -99,10 +109,12 @@ function findElementSibling(
   let comparer: (el: HTMLStyleElement) => number = (el: HTMLStyleElement) =>
     targetOrder - styleBucketOrderingMap[el.getAttribute(DATA_BUCKET_ATTR) as StyleBucketName];
 
-  let styleElements = target.head.querySelectorAll<HTMLStyleElement>(`[${DATA_BUCKET_ATTR}]`);
+  const head = target.querySelector('head');
+  const scope = head ? head : target;
+  let styleElements = scope.querySelectorAll<HTMLStyleElement>(`[${DATA_BUCKET_ATTR}]`);
 
   if (targetBucket === 'm' && metadata) {
-    const mediaElements = target.head.querySelectorAll<HTMLStyleElement>(`[${DATA_BUCKET_ATTR}="${targetBucket}"]`);
+    const mediaElements = scope.querySelectorAll<HTMLStyleElement>(`[${DATA_BUCKET_ATTR}="${targetBucket}"]`);
     // only reduce the scope of the search and change comparer
     // if there are other media buckets already on the page
     if (mediaElements.length) {

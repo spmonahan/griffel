@@ -1,10 +1,17 @@
 import { DATA_BUCKET_ATTR } from '../constants';
 import { IsomorphicStyleSheet, StyleBucketName } from '../types';
 
+declare global {
+  interface Window {
+    __adoptedStylesheets__: CSSStyleSheet[];
+  }
+}
+
 export function createIsomorphicStyleSheet(
   styleElement: HTMLStyleElement | undefined,
   bucketName: StyleBucketName,
   elementAttributes: Record<string, string>,
+  constructableStylesheets: boolean,
 ): IsomorphicStyleSheet {
   // no CSSStyleSheet in SSR, just append rules here for server render
   const __cssRulesForSSR: string[] = [];
@@ -16,8 +23,24 @@ export function createIsomorphicStyleSheet(
     }
   }
 
+  let sheet: CSSStyleSheet;
   function insertRule(rule: string) {
-    if (styleElement?.sheet) {
+    if (constructableStylesheets) {
+      if (!sheet) {
+        sheet = new CSSStyleSheet();
+        // @ts-expect-error
+        sheet.replaceSync(rule);
+        // @ts-expect-error
+        document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+        // if (!window.__adoptedStylesheets__) {
+        //   window.__adoptedStylesheets__ = [];
+        // }
+        // window.__adoptedStylesheets__.push(sheet);
+      } else {
+        sheet.insertRule(rule, sheet.cssRules.length);
+      }
+      return sheet.cssRules.length;
+    } else if (styleElement?.sheet) {
       return styleElement.sheet.insertRule(rule, styleElement.sheet.cssRules.length);
     }
 
@@ -30,7 +53,9 @@ export function createIsomorphicStyleSheet(
     element: styleElement,
     bucketName,
     cssRules() {
-      if (styleElement?.sheet) {
+      if (constructableStylesheets) {
+        return Array.from(sheet.cssRules).map(cssRule => cssRule.cssText);
+      } else if (styleElement?.sheet) {
         return Array.from(styleElement.sheet.cssRules).map(cssRule => cssRule.cssText);
       }
 
@@ -48,6 +73,7 @@ export function createIsomorphicStyleSheetFromElement(element: HTMLStyleElement)
     element,
     elementAttributes[DATA_BUCKET_ATTR] as StyleBucketName,
     elementAttributes,
+    false,
   );
   return stylesheet;
 }
